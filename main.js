@@ -2,9 +2,10 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { GLTFLoader } from 'https://cdn.skypack.dev/three@0.128.0/examples/jsm/loaders/GLTFLoader.js';
 import './style.css';
-import javascriptLogo from './javascript.svg';
+import javascriptLogo from '../javascript.svg';
 import viteLogo from '/vite.svg';
-import { setupCounter } from './counter.js';
+import { setupCounter } from '../counter.js';
+
 
 // Setup
 const scene = new THREE.Scene();
