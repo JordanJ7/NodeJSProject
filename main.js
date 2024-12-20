@@ -1,113 +1,61 @@
-import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import { GLTFLoader } from 'https://cdn.skypack.dev/three@0.128.0/examples/jsm/loaders/GLTFLoader.js';
-import './style.css';
-import javascriptLogo from '../javascript.svg';
-import viteLogo from '/vite.svg';
-import { setupCounter } from '../counter.js';
+// Setup the canvas
+const canvas = document.getElementById("artCanvas");
+const ctx = canvas.getContext("2d");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 
+// Define a color palette
+const palette = [
 
-// Setup
-const scene = new THREE.Scene();
+    //Sylveon Color Palette
+    "#F59BAD", //Dark Pink
+    "#FAD0D5", // Light Pink
+    "#F8EADC", // Creamy Yellowish
+    "#778BBE", // Dark Blue
+    "#9EDEF9", // Light Blue
 
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+//Arcane Void
+    // "#F1B2D8", //Light Pink
+    // "#D2D8AF", // Yellowish Green
+    // "#F8EADC", // Creamy Yellowish
+    //  "#493C52", // Dark Purple
+    // "#9EDEF9", // Light Blue
+    //  "#93EFDE", // Light Teal
+    //  "#B79FB7", // Light Purple
 
-const renderer = new THREE.WebGLRenderer({
-    canvas: document.querySelector('#bg'),
-});
-renderer.setPixelRatio(window.devicePixelRatio);
-renderer.setSize(window.innerWidth, window.innerHeight);
-camera.position.setZ(50);
-camera.position.setX(-3);
-
-// Orbit Controls
-const controls = new OrbitControls(camera, renderer.domElement);
-controls.enableDamping = true;
-
-// Object Texture Mapping
-const smileTexture = new THREE.TextureLoader().load('images/KevinCube.png');
-const smileMaterial = new THREE.MeshBasicMaterial({ map: smileTexture });
-
-// Cube 1
-const cubeGeometry = new THREE.BoxGeometry(10, 10, 10);
-const cube1 = new THREE.Mesh(cubeGeometry, smileMaterial);
-scene.add(cube1);
-cube1.position.set(15, 0, 15);
-
-// Cube 2
-const cube2 = new THREE.Mesh(cubeGeometry, smileMaterial);
-scene.add(cube2);
-cube2.position.set(-15, 0, 15);
-
-// Sphere
-const sphereGeometry = new THREE.SphereGeometry(10, 22, 10);
-const smileSphere = new THREE.Mesh(sphereGeometry, smileMaterial);
-scene.add(smileSphere);
-smileSphere.position.set(0, 0, -15);
-
-// Movement Variables
-const objects = [
-    { mesh: cube1, direction: new THREE.Vector3(1, 0, 0), speed: 0.1 },
-    { mesh: cube2, direction: new THREE.Vector3(-1, 0, 0), speed: 0.1 },
-    { mesh: smileSphere, direction: new THREE.Vector3(0, 0, 1), speed: 0.1 },
 ];
 
-// Lights
-const pointLight = new THREE.PointLight(0xffffff, 1);
-pointLight.position.set(0, -10, 10);
-scene.add(pointLight);
-
-const ambientLight = new THREE.AmbientLight(0xffffff);
-scene.add(ambientLight);
-
-// Animation Loop
-function animate() {
-    requestAnimationFrame(animate);
-
-    // Move objects
-    objects.forEach(({ mesh, direction, speed }) => {
-        mesh.position.addScaledVector(direction, speed);
-
-        // Check boundaries and reverse direction
-        if (mesh.position.x > 30 || mesh.position.x < -30) direction.x *= -1;
-        if (mesh.position.y > 30 || mesh.position.y < -30) direction.y *= -1;
-        if (mesh.position.z > 30 || mesh.position.z < -30) direction.z *= -1;
-    });
-
-    // Update OrbitControls if damping is enabled
-    controls.update();
-
-    renderer.render(scene, camera);
+// Function that pick a random color from the palette
+function getRandomColor() {
+    return palette[Math.floor(Math.random() * palette.length)];
 }
-animate();
 
-// Handle Window Resizing
-window.addEventListener('resize', () => {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-});
+// Generates noise-based art
+function generateArt() {
+    // Clear the canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-// Background
-const spaceTexture = new THREE.TextureLoader().load('images/peakpx.jpg');
-scene.background = spaceTexture;
+    // Create random background color from the palette
+    ctx.fillStyle = getRandomColor();
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-// HTML Content
-document.querySelector('#app').innerHTML = `
-  <div>
-    <a href="https://vite.dev" target="_blank">
-      <img src="${viteLogo}" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank">
-      <img src="${javascriptLogo}" class="logo vanilla" alt="JavaScript logo" />
-    </a>
-    <h1>Hello Vite!</h1>
-    <div class="card">
-      <button id="counter" type="button"></button>
-    </div>
-    <p class="read-the-docs">
-      Click on the Vite logo to learn more
-    </p>
-  </div>
-`;
-setupCounter(document.querySelector('#counter'));
+    // Draw shapes with random properties
+    for (let i = 0; i < 100; i++) {
+        ctx.beginPath();
+        const x = Math.random() * canvas.width;
+        const y = Math.random() * canvas.height;
+        const size = Math.random() * 100;
+
+        // Random color from the palette
+        const randomColor = getRandomColor();
+        ctx.arc(x, y, size, 0, Math.PI * 2);
+        ctx.fillStyle = randomColor;
+        ctx.fill();
+    }
+}
+
+// Call the function to generate art
+generateArt();
+
+// Redraw every second (for dynamic change)
+setInterval(generateArt, 1000);
