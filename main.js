@@ -9,9 +9,9 @@ const palette = [
 
     //Sylveon Color Palette
     "#F59BAD", //Dark Pink
-   "#FAD0D5", // Light Pink
+    "#FAD0D5", // Light Pink
     "#F8EADC", // Creamy Yellowish
-     "#778BBE", // Dark Blue
+    "#778BBE", // Dark Blue
     "#9EDEF9", // Light Blue
 
 //Arcane Void
